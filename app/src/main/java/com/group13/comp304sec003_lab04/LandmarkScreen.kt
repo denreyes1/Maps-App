@@ -1,14 +1,9 @@
 package com.group13.comp304sec003_lab04
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,12 +19,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -38,14 +30,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.group13.comp304sec003_lab04.data.Category
-import com.group13.comp304sec003_lab04.data.CategoryData.categories
 import com.group13.comp304sec003_lab04.data.Landmark
 import com.group13.comp304sec003_lab04.data.LandmarkData
-import com.group13.comp304sec003_lab04.ui.theme.Group13_COMP304Sec003_Lab04Theme
 
 @Composable
-fun LandmarkList(landmarks: List<Landmark>) {
+fun LandmarkList(title: String, landmarks: List<Landmark>) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -62,12 +51,13 @@ fun LandmarkList(landmarks: List<Landmark>) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(top = 16.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(48.dp))
             
             Text(
-                text = "HISTORIC",
+                text = title.uppercase(),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -100,7 +90,7 @@ fun LandmarkCard(landmark: Landmark) {
             .fillMaxWidth()
             .height(200.dp)
             .border(
-                BorderStroke(2.dp, Color.White), // White border with 2.dp thickness
+                BorderStroke(4.dp, Color.White), // White border with 2.dp thickness
                 shape = RoundedCornerShape(16.dp)
             ),
         shape = RoundedCornerShape(16.dp),
@@ -140,8 +130,26 @@ fun LandmarkCard(landmark: Landmark) {
     }
 }
 
+//@Preview(showBackground = true)
+//@Composable
+//fun LandmarkHistoricPreview() {
+//    LandmarkList("Historic", LandmarkData.historic)
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun LandmarkParkPreview() {
+//    LandmarkList("Park", LandmarkData.park)
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun LandmarkMuseumPreview() {
+//    LandmarkList("Museum", LandmarkData.museums)
+//}
+
 @Preview(showBackground = true)
 @Composable
-fun LandmarkPreview() {
-    LandmarkList(LandmarkData.landmarks)
+fun LandmarkTouristicPreview() {
+    LandmarkList("Touristic", LandmarkData.touristic)
 }

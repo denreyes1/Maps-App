@@ -8,13 +8,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,19 +23,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.group13.comp304sec003_lab04.data.Category
-import com.group13.comp304sec003_lab04.data.CategoryData.categories
-import com.group13.comp304sec003_lab04.data.LandmarkData
-
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.group13.comp304sec003_lab04.CategoryCard as CategoryCard1
 
 @Composable
-fun LandmarkLocator() {
+fun CategoryList(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,6 +54,8 @@ fun LandmarkLocator() {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            Spacer(modifier = Modifier.height(48.dp))
+
             Image(
                 painter = painterResource(id = R.drawable.mexico_title), // Replace with your image resource
                 contentDescription = null,
@@ -64,15 +64,35 @@ fun LandmarkLocator() {
                     .height(100.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(
-                contentPadding = PaddingValues(vertical = 8.dp),
+            Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(categories.size) { index ->
-                    LandmarkCategoryCard(category = categories[index])
-                }
+                CategoryCard1(
+                    name = "HISTORIC",
+                    image = R.drawable.cat_historic,
+                    color = 0x40E53935,
+                    onClick = { navController.navigate("landmarkScreen/historic") }
+                )
+                CategoryCard1(
+                    name = "PARK",
+                    image = R.drawable.cat_park,
+                    color = 0x40388E3C,
+                    onClick = { navController.navigate("landmarkScreen/park") }
+                )
+                CategoryCard1(
+                    name = "MUSEUM",
+                    image = R.drawable.cat_museum,
+                    color = 0x40FFB300,
+                    onClick = { navController.navigate("landmarkScreen/museum") }
+                )
+                CategoryCard1(
+                    name = "TOURISTIC",
+                    image = R.drawable.cat_touristic,
+                    color = 0x400394D1,
+                    onClick = { navController.navigate("landmarkScreen/touristic") }
+                )
             }
         }
     }
@@ -80,22 +100,28 @@ fun LandmarkLocator() {
 
 
 @Composable
-fun LandmarkCategoryCard(category: Category) {
+fun CategoryCard(
+    name: String,
+    image: Int,
+    color: Long,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp)
+            .padding(8.dp)
             .border(
-                BorderStroke(2.dp, Color.White), // White border with 2.dp thickness
+                BorderStroke(4.dp, Color.White), // White border with 2.dp thickness
                 shape = RoundedCornerShape(16.dp)
-            )
-            .clickable { /* Handle click */ },
+            ),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp),
+        onClick = onClick
     ) {
         Box {
             Image(
-                painter = painterResource(id = category.image), // Replace with your image resource
+                painter = painterResource(id = image), // Replace with your image resource
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -104,11 +130,11 @@ fun LandmarkCategoryCard(category: Category) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(category.color))
+                    .background(Color(color))
             )
 
             Text(
-                text = category.name,
+                text = name,
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -126,5 +152,5 @@ fun LandmarkCategoryCard(category: Category) {
 @Preview(showBackground = true)
 @Composable
 fun LandingPreview() {
-    LandmarkLocator()
+    CategoryList(rememberNavController())
 }
