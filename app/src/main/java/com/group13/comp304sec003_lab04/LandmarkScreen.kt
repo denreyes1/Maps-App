@@ -13,14 +13,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -30,11 +37,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.group13.comp304sec003_lab04.data.Landmark
 import com.group13.comp304sec003_lab04.data.LandmarkData
 
 @Composable
-fun LandmarkList(title: String, landmarks: List<Landmark>) {
+fun LandmarkList(navController: NavHostController, title: String, landmarks: List<Landmark>) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -80,6 +89,23 @@ fun LandmarkList(title: String, landmarks: List<Landmark>) {
                 }
             }
         }
+    }
+
+    // Back Button
+    FloatingActionButton(
+        onClick = { navController.popBackStack() },
+        containerColor = Color.White,
+        shape = CircleShape,
+        modifier = Modifier
+            .padding(start = 16.dp, top = 62.dp)
+            .size(36.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = "Back",
+            tint = Color.Black,
+            modifier = Modifier.size(18.dp)
+        )
     }
 }
 
@@ -133,23 +159,23 @@ fun LandmarkCard(landmark: Landmark) {
 //@Preview(showBackground = true)
 //@Composable
 //fun LandmarkHistoricPreview() {
-//    LandmarkList("Historic", LandmarkData.historic)
+//    LandmarkList(rememberNavController(), "Historic", LandmarkData.historic)
 //}
 //
 //@Preview(showBackground = true)
 //@Composable
 //fun LandmarkParkPreview() {
-//    LandmarkList("Park", LandmarkData.park)
+//    LandmarkList(rememberNavController(), "Park", LandmarkData.park)
 //}
 //
 //@Preview(showBackground = true)
 //@Composable
 //fun LandmarkMuseumPreview() {
-//    LandmarkList("Museum", LandmarkData.museums)
+//    LandmarkList(rememberNavController(), "Museum", LandmarkData.museums)
 //}
 
 @Preview(showBackground = true)
 @Composable
 fun LandmarkTouristicPreview() {
-    LandmarkList("Touristic", LandmarkData.touristic)
+    LandmarkList(rememberNavController(), "Touristic", LandmarkData.touristic)
 }

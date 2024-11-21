@@ -19,16 +19,25 @@ fun AppNavigation(){
         }
 
         composable("landmarkScreen/historic") {
-            LandmarkList("Historic", LandmarkData.historic)
+            LandmarkList(navController, "Historic", LandmarkData.historic)
         }
         composable("landmarkScreen/park") {
-            LandmarkList("Park", LandmarkData.park)
+            LandmarkList(navController, "Park", LandmarkData.park)
         }
         composable("landmarkScreen/museum") {
-            LandmarkList("Museum", LandmarkData.museums)
+            LandmarkList(navController, "Museum", LandmarkData.museums)
         }
         composable("landmarkScreen/touristic") {
-            LandmarkList("Touristic", LandmarkData.touristic)
+            LandmarkList(navController, "Touristic", LandmarkData.touristic)
         }
+
+//        composable("${"yoyoActivity"}/{placeID}") {
+//            if (_placeID > 0) {
+//                val placeID = _placeID
+//                MapScreen(navController, placeID)
+//            } else {
+//                Toast.makeText(LocalContext.current, "There's an error retrieving that location", Toast.LENGTH_LONG).show()
+//            }
+//        }
     }
 }
