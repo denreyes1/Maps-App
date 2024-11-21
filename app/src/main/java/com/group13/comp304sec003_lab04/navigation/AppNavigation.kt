@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.group13.comp304sec003_lab04.CategoryList
 import com.group13.comp304sec003_lab04.LandmarkList
+import com.group13.comp304sec003_lab04.MapScreen
 import com.group13.comp304sec003_lab04.data.LandmarkData
 
 
@@ -19,25 +20,48 @@ fun AppNavigation(){
         }
 
         composable("landmarkScreen/historic") {
-            LandmarkList(navController, "Historic", LandmarkData.historic)
+            LandmarkList(
+                navController,
+                "Historic",
+                LandmarkData.historic,
+                onClick = {
+                    navController.navigate("mapScreen")
+                }
+            )
         }
         composable("landmarkScreen/park") {
-            LandmarkList(navController, "Park", LandmarkData.park)
+            LandmarkList(
+                navController,
+                "Park",
+                LandmarkData.park,
+                onClick = {
+                    navController.navigate("mapScreen")
+                }
+            )
         }
         composable("landmarkScreen/museum") {
-            LandmarkList(navController, "Museum", LandmarkData.museums)
+            LandmarkList(
+                navController,
+                "Museum",
+                LandmarkData.museums,
+                onClick = {
+                    navController.navigate("mapScreen")
+                }
+            )
         }
         composable("landmarkScreen/touristic") {
-            LandmarkList(navController, "Touristic", LandmarkData.touristic)
+            LandmarkList(
+                navController,
+                "Touristic",
+                LandmarkData.touristic,
+                onClick = {
+                    navController.navigate("mapScreen")
+                }
+            )
         }
 
-//        composable("${"yoyoActivity"}/{placeID}") {
-//            if (_placeID > 0) {
-//                val placeID = _placeID
-//                MapScreen(navController, placeID)
-//            } else {
-//                Toast.makeText(LocalContext.current, "There's an error retrieving that location", Toast.LENGTH_LONG).show()
-//            }
-//        }
+        composable("mapScreen") {
+            MapScreen(navController)
+        }
     }
 }

@@ -27,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -43,7 +42,7 @@ import com.group13.comp304sec003_lab04.data.Landmark
 import com.group13.comp304sec003_lab04.data.LandmarkData
 
 @Composable
-fun LandmarkList(navController: NavHostController, title: String, landmarks: List<Landmark>) {
+fun LandmarkList(navController: NavHostController, title: String, landmarks: List<Landmark>, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -85,7 +84,7 @@ fun LandmarkList(navController: NavHostController, title: String, landmarks: Lis
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(landmarks) { landmark ->
-                    LandmarkCard(landmark)
+                    LandmarkCard(landmark, onClick = onClick)
                 }
             }
         }
@@ -110,7 +109,7 @@ fun LandmarkList(navController: NavHostController, title: String, landmarks: Lis
 }
 
 @Composable
-fun LandmarkCard(landmark: Landmark) {
+fun LandmarkCard(landmark: Landmark, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -121,6 +120,7 @@ fun LandmarkCard(landmark: Landmark) {
             ),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp),
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -177,5 +177,5 @@ fun LandmarkCard(landmark: Landmark) {
 @Preview(showBackground = true)
 @Composable
 fun LandmarkTouristicPreview() {
-    LandmarkList(rememberNavController(), "Touristic", LandmarkData.touristic)
+    LandmarkList(rememberNavController(), "Touristic", LandmarkData.touristic, {})
 }
