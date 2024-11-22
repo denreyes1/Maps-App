@@ -1,25 +1,46 @@
 package com.group13.comp304sec003_lab04
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -34,12 +55,15 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import com.group13.comp304sec003_lab04.data.Landmark
+import com.group13.comp304sec003_lab04.data.LandmarkData
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 @Composable
 fun MapScreen(navController: NavHostController, landmarkData: Landmark, ) {
     val coroutineScope = rememberCoroutineScope()
+    var showMapCard by remember { mutableStateOf(false) }
 
     // Map UI state
     val cameraPositionState = rememberCameraPositionState {
@@ -59,13 +83,25 @@ fun MapScreen(navController: NavHostController, landmarkData: Landmark, ) {
 //    }
 
     Box(modifier = Modifier.fillMaxSize()) {
+
         // Google Map Composable
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             uiSettings = MapUiSettings(zoomControlsEnabled = false), // Disable default controls
 //            properties = MapProperties(isMyLocationEnabled = locationPermissionState.status.isGranted)
-            properties = MapProperties(isMyLocationEnabled = false)
+            properties = MapProperties(isMyLocationEnabled = false),
+            onMapLongClick = { latLng ->
+                showMapCard = true
+
+                val offsetLatLng = LatLng(landmarkData.lat + 0.002, landmarkData.lng)
+                coroutineScope.launch {
+                    cameraPositionState.animate(
+                        CameraUpdateFactory.newLatLngZoom(offsetLatLng, 16f),
+                        250
+                    )
+                }
+            }
         ) {
             Marker(
                 state = rememberMarkerState(position = LatLng(landmarkData.lat, landmarkData.lng)),
@@ -145,6 +181,75 @@ fun MapScreen(navController: NavHostController, landmarkData: Landmark, ) {
         }
     }
 
+    if (showMapCard) {
+        Box(modifier = Modifier.padding(horizontal = 32.dp, vertical = 48.dp)) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        BorderStroke(4.dp, Color.White), // White border with 2.dp thickness
+                        shape = RoundedCornerShape(16.dp)
+                    ),
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    // Image Section
+                    Image(
+                        painter = painterResource(id = landmarkData.image),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .height(180.dp)
+                            .fillMaxWidth()
+                    )
+                    // Text Section
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .padding(vertical = 10.dp, horizontal = 12.dp)
+                    ) {
+                        Text(
+                            text = landmarkData.title,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = Color.Black
+                        )
+                        Text(
+                            text = landmarkData.subtitle,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray
+                        )
+                        Text(
+                            text = landmarkData.description,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray
+                        )
+                    }
+                }
+
+                // Close Button at Bottom-Right
+                TextButton(
+                    onClick = {
+                        showMapCard = false
+                    },
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(horizontal = 8.dp)
+                ) {
+                    Text(
+                        text = "Close",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = colorResource(id = R.color.mexgreen)
+                    )
+                }
+            }
+        }
+    }
+
     // Back Button
     FloatingActionButton(
         onClick = { navController.popBackStack() },
@@ -166,9 +271,9 @@ fun MapScreen(navController: NavHostController, landmarkData: Landmark, ) {
 @Preview(showBackground = true)
 @Composable
 fun MapScreenPreview() {
-//    MapScreen(
-//        rememberNavController(),
-////        Json.decodeFromString(it.arguments?.getString("weatherData") ?: "")
-//
-//    )
+    MapScreen(
+        rememberNavController(),
+//        Json.decodeFromString(it.arguments?.getString("weatherData") ?: "")
+        LandmarkData.touristic[0]
+    )
 }
