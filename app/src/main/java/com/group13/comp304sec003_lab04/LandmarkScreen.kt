@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +43,12 @@ import com.group13.comp304sec003_lab04.data.Landmark
 import com.group13.comp304sec003_lab04.data.LandmarkData
 
 @Composable
-fun LandmarkList(navController: NavHostController, title: String, landmarks: List<Landmark>, onClick: () -> Unit) {
+fun LandmarkList(
+    navController: NavHostController,
+    title: String,
+    landmarks: List<Landmark>,
+    onItemClick: (Landmark) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -84,7 +90,10 @@ fun LandmarkList(navController: NavHostController, title: String, landmarks: Lis
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(landmarks) { landmark ->
-                    LandmarkCard(landmark, onClick = onClick)
+                    LandmarkCard(
+                        landmark = landmark,
+                        onItemClick = onItemClick
+                    )
                 }
             }
         }
@@ -109,7 +118,7 @@ fun LandmarkList(navController: NavHostController, title: String, landmarks: Lis
 }
 
 @Composable
-fun LandmarkCard(landmark: Landmark, onClick: () -> Unit) {
+fun LandmarkCard(landmark: Landmark, onItemClick: (Landmark) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -117,10 +126,11 @@ fun LandmarkCard(landmark: Landmark, onClick: () -> Unit) {
             .border(
                 BorderStroke(4.dp, Color.White), // White border with 2.dp thickness
                 shape = RoundedCornerShape(16.dp)
-            ),
+            ).clickable {
+                onItemClick(landmark)
+            },
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(8.dp),
-        onClick = onClick
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -177,5 +187,5 @@ fun LandmarkCard(landmark: Landmark, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun LandmarkTouristicPreview() {
-    LandmarkList(rememberNavController(), "Touristic", LandmarkData.touristic, {})
+    LandmarkList(rememberNavController(), "Touristic", LandmarkData.touristic) {}
 }

@@ -1,6 +1,6 @@
 package com.group13.comp304sec003_lab04
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,18 +11,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,17 +30,21 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
+import com.group13.comp304sec003_lab04.data.Landmark
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 @Composable
-fun MapScreen(navController: NavHostController) {
+fun MapScreen(navController: NavHostController, landmarkData: Landmark, ) {
     val coroutineScope = rememberCoroutineScope()
 
     // Map UI state
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            LatLng(43.6677, -79.3948), // Tentative mapping
+            LatLng(landmarkData.lat, landmarkData.lng),
             15f
         )
     }
@@ -67,7 +66,13 @@ fun MapScreen(navController: NavHostController) {
             uiSettings = MapUiSettings(zoomControlsEnabled = false), // Disable default controls
 //            properties = MapProperties(isMyLocationEnabled = locationPermissionState.status.isGranted)
             properties = MapProperties(isMyLocationEnabled = false)
-        )
+        ) {
+            Marker(
+                state = rememberMarkerState(position = LatLng(landmarkData.lat, landmarkData.lng)),
+                title = landmarkData.title,
+                snippet = landmarkData.subtitle
+            )
+        }
 
         // Bottom-right corner buttons
         Column(
@@ -161,5 +166,9 @@ fun MapScreen(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun MapScreenPreview() {
-    MapScreen(rememberNavController())
+//    MapScreen(
+//        rememberNavController(),
+////        Json.decodeFromString(it.arguments?.getString("weatherData") ?: "")
+//
+//    )
 }

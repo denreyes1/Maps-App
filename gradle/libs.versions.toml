@@ -13,6 +13,8 @@ googleMap = "4.3.3"
 googleMapTools = "6.2.1"
 navigationCompose = "2.8.2"
 
+serializationJson = "1.5.1"
+
 koin = "4.0.0"
 koinCompose = "4.0.0"
 playServicesLocation = "21.3.0"
@@ -43,8 +45,11 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-android-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinCompose" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson" }
+
 
 [bundles]
+serialization = ["serialization-json"]
 googleMapping = ["google-map", "google-map-utils", "google-map-widgets"]
 koin = ["koin-core", "koin-android", "koin-android-compose"]
 
